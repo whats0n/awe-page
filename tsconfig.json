@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "outDir": "dist",
+
+    "allowJs": true,
+    "checkJs": false,
+
+    "declaration": true,
+    "emitDeclarationOnly": true,
+
+    "isolatedModules": true,
+
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "noImplicitAny": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+
+    "allowUnreachableCode": false,
+
+    // "jsx": "react",
+    "moduleResolution": "node",
+
+    "baseUrl": "./",
+    "paths": {
+      "*": [
+        "node_modules/*",
+      ],
+      "~/*": ["src/scripts/*"]
+    }
+  },
+  "include": ["src/scripts/**/*"],
+  "exclude": ["src/scripts/utils/**/*"]
+}
