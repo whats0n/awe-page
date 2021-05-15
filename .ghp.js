@@ -30,7 +30,9 @@ const execPromisify = command => new Promise((resolve, reject) => {
     'git reset HEAD~'
   ]
 
-  for (let command of commands) await execPromisify(command)
+  const command = commands.join('; ')
+
+  await execPromisify(command)
 
   fs.writeFileSync('.gitignore', content, 'utf8')
 
