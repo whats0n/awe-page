@@ -1,5 +1,6 @@
 import Scroller from './Scroller'
 import EventBus from './EventBus'
+import debounce from '~/utils/debounce'
 
 export default class AwePage implements AwePage {
   options: AwePageOptions
@@ -21,7 +22,7 @@ export default class AwePage implements AwePage {
   }
 
   $refs: AwePageRefs
-  $styles: HTMLStyleElement
+  $styles: AwePageStyles = {}
 
   bus: EventBus
   scroller: Scroller
@@ -33,6 +34,8 @@ export default class AwePage implements AwePage {
 
     this.bus = new EventBus()
     this.scroller = new Scroller(this.$refs.container, this.bus)
+
+    this.onResize = debounce(this.onResize, 100)
 
     this.initListeners()
 
@@ -75,51 +78,31 @@ export default class AwePage implements AwePage {
   }
 
   initStyles = (): void => {
-    const selector = 'style[data-bp="inited"]'
-    const style: HTMLStyleElement = document.querySelector(selector)
+    const common: HTMLStyleElement = document.createElement('style')
+    const section: HTMLStyleElement = document.createElement('style')
 
-    if (style) {
-      this.$styles = style
-      return
-    }
+    this.$styles.common = common
+    this.$styles.section = section
 
-    this.$styles = document.createElement('style')
-    this.$styles.dataset.bp = 'inited'
-    this.$styles.innerHTML = `
-      body {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        overflow: hidden;
-      }
+    this.setCommonStyle()
+    this.setSectionStyle()
 
-      .bp-container {
-        position: relative;
-        transform: translateY(0);
-        transition: transform ${this.options.speed}ms;
-      }
-
-      .bp-section {
-        width: 100vw;
-        height: 100vh;
-        overflow: auto;
-      }
-    `
-
-    document.head.appendChild(this.$styles)
+    document.head.appendChild(common)
+    document.head.appendChild(section)
   }
 
   initListeners = (): void => {
     this.bus.on('move:prev', this.onPrev)
     this.bus.on('move:next', this.onNext)
     this.$refs.container.addEventListener('transitionend', this.onAnimationEnd)
+    window.addEventListener('resize', this.onResize)
   }
 
   destroy = (): void => {
     this.scroller.destroy()
-    document.head.removeChild(this.$styles)
+    window.removeEventListener('resize', this.onResize)
+    document.head.removeChild(this.$styles.common)
+    document.head.removeChild(this.$styles.section)
   }
 
   animate = (index: number): void => {
@@ -135,6 +118,40 @@ export default class AwePage implements AwePage {
   setTransform = (): void => {
     const y: number = (this.index / this.limit) * 100
     this.$refs.container.setAttribute('style', `transform: translateY(${-y}%)`)
+  }
+
+  setCommonStyle = (): void => {
+    this.$styles.common.innerHTML = `
+      body {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        overflow: hidden;
+        background: black;
+      }
+
+      .bp-container {
+        position: relative;
+        transform: translateY(0);
+        transition: transform ${this.options.speed}ms;
+      }
+    `
+  }
+
+  setSectionStyle = (): void => {
+    this.$styles.section.innerHTML = `
+      .bp-section {
+        width: 100vw;
+        height: ${window.innerHeight}px;
+        overflow: auto;
+      }
+    `
+  }
+
+  onResize = (): void => {
+    this.setSectionStyle()
   }
 
   onAnimationEnd = (e: Event): void => {

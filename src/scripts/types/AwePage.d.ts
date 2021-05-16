@@ -11,6 +11,10 @@ declare interface AwePageRefs {
   sections: Array<Element>
 }
 
+declare interface AwePageStyles {
+  [key: string]: HTMLStyleElement
+}
+
 declare interface AwePage {
   bus: EventBus
 

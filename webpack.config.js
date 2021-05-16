@@ -5,8 +5,8 @@ const ESLintPlugin = require('eslint-webpack-plugin')
 
 module.exports = {
   entry: './scripts/index.ts',
-  devtool: 'inline-source-map',
-  mode: 'development',
+  devtool: process.env.NODE_ENV !== 'production' && 'inline-source-map',
+  mode: process.env.NODE_ENV || 'production',
   context: path.resolve(__dirname, './src'),
   output: {
     filename: 'scripts/index.js',
@@ -58,6 +58,7 @@ module.exports = {
     contentBase: path.join(__dirname, 'dist'),
     compress: true,
     port: 9000,
+    host: '0.0.0.0'
   },
   plugins: [
     new HtmlWebpackPlugin({

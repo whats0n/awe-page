@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npx webpack serve",
-    "build": "npx webpack",
-    "ghp": "npx webpack && node .ghp.js"
+    "start": "export NODE_ENV=development && npx webpack serve",
+    "build": "export NODE_ENV=production && npx webpack",
+    "ghp": "npm run build && node .ghp.js"
   },
   "repository": {
     "type": "git",
