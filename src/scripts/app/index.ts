@@ -99,6 +99,7 @@ export default class AwePage implements AwePage {
   }
 
   destroy = (): void => {
+    this.$refs.container.removeAttribute('style')
     this.scroller.destroy()
     window.removeEventListener('resize', this.onResize)
     document.head.removeChild(this.$styles.common)

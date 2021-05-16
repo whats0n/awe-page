@@ -21,6 +21,14 @@ ap.bus.on('animation:end', (params) => {...})
 |onLoad|function|null|
 
 ---
+
+## Methods
+
+### **destroy**
+Destroy the AwePage instance with functionality
+
+---
+
 ## **Events**
 
 ### **animation:start**
